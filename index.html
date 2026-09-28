@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<meta name="description" content="Javlonning master darajadagi shaxsiy dars jadvali">
+<title>Jadval Pro — Dars jadvali</title>
+<style>
+:root{
+  --bg:#06101d;
+  --bg2:#0b1728;
+  --card:rgba(16,31,52,.78);
+  --card2:rgba(12,25,43,.92);
+  --text:#f6fbff;
+  --muted:#9eb0c8;
+  --line:rgba(255,255,255,.09);
+  --accent:#49b7ff;
+  --accent2:#7c5cff;
+  --good:#2de39f;
+  --warn:#ffbf5b;
+  --danger:#ff667d;
+  --shadow:0 24px 70px rgba(0,0,0,.28);
+  --radius:24px;
+}
+body.light{
+  --bg:#edf5ff; --bg2:#f7fbff; --card:rgba(255,255,255,.86);
+  --card2:rgba(255,255,255,.96); --text:#102033; --muted:#5d718b;
+  --line:rgba(16,32,51,.10); --shadow:0 20px 50px rgba(32,70,120,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:
+   radial-gradient(circle at 10% 0%, rgba(73,183,255,.14), transparent 32%),
+   radial-gradient(circle at 88% 10%, rgba(124,92,255,.16), transparent 28%),
+   linear-gradient(135deg,var(--bg),var(--bg2));
+  background-attachment:fixed;color:var(--text);min-height:100vh;
+}
+button,input{font:inherit}
+button{border:0;cursor:pointer}
+a{color:inherit}
+.container{width:min(1500px,94vw);margin:auto}
+.topbar{
+  position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);
+  background:color-mix(in srgb,var(--bg) 72%, transparent);
+  border-bottom:1px solid var(--line)
+}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.2px}
+.logo{
+  width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 12px 30px rgba(73,183,255,.25);font-size:21px
+}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.icon-btn,.pill-btn{
+  color:var(--text);background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:10px 13px;backdrop-filter:blur(10px);
+  transition:.2s transform,.2s border-color,.2s background
+}
+.icon-btn:hover,.pill-btn:hover{transform:translateY(-2px);border-color:rgba(73,183,255,.5)}
+.hero{padding:34px 0 18px}
+.hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:18px}
+.hero-card,.panel{
+  background:linear-gradient(145deg,var(--card),var(--card2));
+  border:1px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius)
+}
+.hero-card{padding:30px;position:relative;overflow:hidden}
+.hero-card:after{
+  content:"";position:absolute;width:220px;height:220px;border-radius:50%;
+  right:-90px;top:-110px;background:radial-gradient(circle,rgba(73,183,255,.35),transparent 68%);
+}
+.eyebrow{color:var(--accent);font-size:12px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase}
+h1{font-size:clamp(30px,4vw,54px);line-height:1.02;margin:10px 0 12px}
+.hero p{color:var(--muted);max-width:760px;margin:0;line-height:1.7}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+.stat{padding:15px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px}
+.stat b{font-size:24px;display:block}
+.stat span{color:var(--muted);font-size:12px}
+.today-card{padding:24px;display:flex;flex-direction:column;justify-content:space-between}
+.today-top{display:flex;justify-content:space-between;gap:14px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:rgba(45,227,159,.12);color:var(--good);font-weight:800;font-size:12px;border:1px solid rgba(45,227,159,.18)}
+.clock{font-size:36px;font-weight:900;letter-spacing:-1px;margin-top:18px}
+.date-line{color:var(--muted);margin-top:4px}
+.extra{
+  margin-top:16px;padding:14px;border-radius:17px;border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(73,183,255,.10),rgba(124,92,255,.08))
+}
+.extra b{display:block;margin-bottom:5px}
+.controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 14px}
+.week-title{font-size:20px;font-weight:900}
+.search{position:relative;min-width:240px}
+.search input{
+  width:100%;padding:12px 14px 12px 40px;border-radius:14px;
+  background:var(--card);border:1px solid var(--line);color:var(--text);outline:none
+}
+.search span{position:absolute;left:13px;top:10px}
+.week-nav{display:flex;gap:8px}
+.schedule{
+  display:grid;grid-template-columns:80px repeat(7,minmax(145px,1fr));
+  border:1px solid var(--line);border-radius:22px;overflow:auto;box-shadow:var(--shadow);
+  background:rgba(0,0,0,.10)
+}
+.cell{border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-height:128px;padding:10px;background:rgba(255,255,255,.02)}
+.cell.head{min-height:74px;position:sticky;top:76px;z-index:8;background:color-mix(in srgb,var(--card2) 88%, transparent);text-align:center;padding:12px}
+.cell.slot{display:flex;align-items:flex-start;justify-content:center;font-weight:900;color:var(--muted);background:rgba(255,255,255,.015)}
+.cell.today{background:linear-gradient(180deg,rgba(73,183,255,.13),transparent 60%)}
+.day-name{font-weight:900}
+.day-date{font-size:12px;color:var(--muted);margin-top:4px}
+.today .day-name,.today .day-date{color:var(--accent)}
+.lesson{
+  min-height:104px;border-radius:17px;padding:13px;margin-bottom:8px;
+  border:1px solid var(--line);background:linear-gradient(145deg,rgba(31,54,84,.64),rgba(15,28,47,.92));
+  transition:.22s transform,.22s border-color,.22s box-shadow
+}
+body.light .lesson{background:linear-gradient(145deg,#fff,#eef6ff)}
+.lesson:hover{transform:translateY(-3px);border-color:rgba(73,183,255,.55);box-shadow:0 14px 28px rgba(0,0,0,.12)}
+.lesson.empty{background:transparent;border-style:dashed;min-height:80px;opacity:.35}
+.subject{font-weight:900;line-height:1.2}
+.teacher{font-size:12px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.time{font-size:12px;font-weight:900;color:var(--accent);margin-top:8px}
+.cab{font-size:11px;color:var(--muted);margin-top:3px}
+.multi{display:grid;gap:7px}
+.group{padding-top:7px;border-top:1px dashed var(--line)}
+.group:first-child{padding-top:0;border-top:0}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{padding:8px 10px;border-radius:999px;font-size:12px;font-weight:800;background:var(--card);border:1px solid var(--line)}
+.sections{display:grid;grid-template-columns:1.35fr .65fr;gap:18px;margin:18px 0 60px}
+.panel{padding:22px}
+.panel h2{margin:0 0 14px;font-size:20px}
+.timeline{display:grid;gap:10px}
+.event{
+  display:flex;gap:12px;align-items:flex-start;padding:14px;border:1px solid var(--line);
+  border-radius:17px;background:rgba(255,255,255,.025)
+}
+.event .emoji{font-size:22px}
+.event b{display:block}
+.event span{color:var(--muted);font-size:13px}
+.holidays{display:grid;gap:9px;max-height:470px;overflow:auto;padding-right:4px}
+.holiday{padding:13px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.holiday .hdate{font-size:12px;color:var(--accent);font-weight:900}
+.holiday .hname{margin-top:4px;font-weight:800}
+.note{margin-top:14px;color:var(--muted);font-size:12px;line-height:1.6}
+.footer{padding:30px 0;color:var(--muted);text-align:center;font-size:13px}
+.modal{
+ position:fixed;inset:0;background:rgba(0,0,0,.58);display:none;place-items:center;z-index:90;padding:20px;
+ backdrop-filter:blur(8px)
+}
+.modal.show{display:grid}
+.modal-box{width:min(620px,95vw);max-height:84vh;overflow:auto;background:var(--card2);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:22px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.toast{
+ position:fixed;right:18px;bottom:18px;z-index:100;display:none;
+ background:var(--card2);border:1px solid var(--line);padding:13px 16px;border-radius:14px;box-shadow:var(--shadow)
+}
+.toast.show{display:block}
+@media (max-width:1050px){
+  .hero-grid,.sections{grid-template-columns:1fr}
+  .schedule{grid-template-columns:62px repeat(7,minmax(190px,1fr))}
+  .cell.head{top:76px}
+}
+@media (max-width:680px){
+  .container{width:min(94vw,600px)}
+  .nav{height:auto;min-height:70px;padding:9px 0}
+  .brand small{display:none}
+  .actions .pill-text{display:none}
+  .hero-card{padding:22px}.stats{grid-template-columns:1fr 1fr 1fr}
+  .stat{padding:11px}.stat b{font-size:20px}
+  .schedule{grid-template-columns:52px repeat(7,minmax(170px,1fr))}
+  .cell{min-height:120px;padding:8px}.lesson{padding:11px}
+}
+@media print{
+ body{background:#fff;color:#000}.topbar,.hero,.controls,.sections,.footer{display:none!important}
+ .schedule{box-shadow:none;border:1px solid #bbb}.cell{border-color:#ccc;background:#fff!important}
+ .lesson{box-shadow:none;color:#000;border-color:#ccc;background:#fff!important}
+ .teacher,.cab{color:#555}.time{color:#000}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="container nav">
+    <div class="brand">
+      <div class="logo">JP</div>
+      <div><b>Jadval Pro</b><small style="display:block;color:var(--muted);font-size:11px">Master dars jadvali</small></div>
+    </div>
+    <div class="actions">
+      <button class="icon-btn" id="todayBtn">📍 Bugun</button>
+      <button class="icon-btn" id="printBtn">🖨️ <span class="pill-text">Chop etish</span></button>
+      <button class="icon-btn" id="themeBtn">☀️/🌙</button>
+      <button class="icon-btn" id="holidayBtn">🎉 Bayramlar</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-card">
+      <div class="eyebrow">Sizning shaxsiy jadvalingiz</div>
+      <h1>Darslar endi<br><span style="background:linear-gradient(90deg,var(--accent),#b79cff);-webkit-background-clip:text;color:transparent">aqlli va chiroyli.</span></h1>
+      <p>Yuborgan jadval rasmingiz asosida haftalik darslar, vaqtlar, o‘qituvchilar, toq/juft kundagi qo‘shimcha mashg‘ulotlar va O‘zbekiston bayramlari bitta interaktiv sahifaga jamlandi.</p>
+      <div class="stats">
+        <div class="stat"><b id="lessonCount">0</b><span>Haftalik dars slotlari</span></div>
+        <div class="stat"><b id="weekRange">—</b><span>Ko‘rsatilayotgan hafta</span></div>
+        <div class="stat"><b id="extraType">—</b><span>Bugungi qo‘shimcha dars</span></div>
+      </div>
+    </div>
+    <div class="today-card hero-card">
+      <div class="today-top">
+        <div><span class="badge">● LIVE</span><div class="clock" id="clock">00:00:00</div><div class="date-line" id="todayText">—</div></div>
+        <div style="font-size:44px">📚</div>
+      </div>
+      <div class="extra" id="extraCard"></div>
+      <div class="chips" style="margin-top:12px">
+        <span class="chip">🔵 Toq sana — English</span>
+        <span class="chip">🟣 Juft sana — Cybersecurity</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="controls">
+  <div>
+    <div class="week-title" id="weekTitle">21–27 sentabr 2026</div>
+    <div style="color:var(--muted);font-size:13px;margin-top:4px">Rasmdagi original jadval haftasi</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+    <div class="search"><span>🔎</span><input id="search" placeholder="Fan yoki o‘qituvchi qidiring..."></div>
+    <div class="week-nav">
+      <button class="pill-btn" id="prev">←</button>
+      <button class="pill-btn" id="snapshot">21–27</button>
+      <button class="pill-btn" id="next">→</button>
+    </div>
+  </div>
+</div>
+
+<section id="schedule" class="schedule"></section>
+
+<section class="sections">
+  <div class="panel">
+    <h2>⚡ Bugungi reja</h2>
+    <div class="timeline" id="todayPlan"></div>
+  </div>
+  <div class="panel">
+    <h2>🎊 Bayramlar va muhim sanalar</h2>
+    <div class="holidays" id="holidayList"></div>
+    <div class="note">Diniy bayramlarning aniq sanalari tegishli rasmiy e’lon bilan belgilanadi. 2026-yil uchun davlatning ish va dam olish kunlari taqvimi rasmiy manbalar asosida kiritilgan.</div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">Jadval Pro • Shaxsiy dars jadvali • Mobil, planshet va kompyuterga mos</footer>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 style="margin:0">🎉 Bayramlar</h2><button class="icon-btn" id="closeModal">✕</button>
+    </div>
+    <p style="color:var(--muted)">O‘zbekistonning muhim bayramlari va 2026-yil dam olish kunlari.</p>
+    <div class="holidays" id="holidayModalList"></div>
+  </div>
+</div>
+<div class="toast" id="toast">Tayyor ✅</div>
+
+<script>
+const DAYS = [
+  {key:'dush', short:'Dush', full:'Dushanba'},
+  {key:'sesh', short:'Sesh', full:'Seshanba'},
+  {key:'chor', short:'Chor', full:'Chorshanba'},
+  {key:'pay', short:'Pay', full:'Payshanba'},
+  {key:'jum', short:'Jum', full:'Juma'},
+  {key:'shan', short:'Shan', full:'Shanba'},
+  {key:'yak', short:'Yak', full:'Yakshanba'},
+];
+
+const schedule = {
+ dush:[
+  {s:'Kelajak soati',t:'Qo‘chqorova N.X.',time:'13:05–13:50'},
+  {s:'Matematika',t:'Qo‘chqorova N.X.',time:'13:55–14:40'},
+  {s:'Texnologiya',groups:[['Safarov J.N.','14:45–15:30'],['Tursunova S.A.','14:45–15:30']]},
+  {s:'Texnologiya',groups:[['Safarov J.N.','15:40–16:25'],['Tursunova S.A.','15:40–16:25']]},
+  {s:'Kimyo',t:'NABIYEVA D.S.',time:'16:30–17:15'},
+  {s:'Rus tili',groups:[['ACHILDIYEVA F.G.','17:20–18:05'],['Asanova M.T.','17:20–18:05']]}
+ ],
+ sesh:[
+  {s:'O‘zbekiston',t:'Javliyeva L.X.',time:'13:05–13:50'},
+  {s:'Fizika',t:'Rajabova Z.S.',time:'13:55–14:40'},
+  {s:'Informatika',groups:[['Pardayev M.E.','14:45–15:30'],['Xolmominov S.','14:45–15:30']]},
+  {s:'Ingliz tili',groups:[['Mamatqulova M.A.','15:40–16:25'],['AMIRQULOVA U.N.','15:40–16:25']]},
+  {s:'Matematika',t:'Qo‘chqorova N.X.',time:'16:30–17:15'},
+  {s:'Geografiya',t:'Baxarova Z.S.',time:'17:20–18:05'}
+ ],
+ chor:[
+  {s:'Matematika',t:'Qo‘chqorova N.X.',time:'13:05–13:50'},
+  {s:'O‘zbekiston',t:'Javliyeva L.X.',time:'13:55–14:40'},
+  {s:'Ona tili',t:'Nurmatova F.S.',time:'14:45–15:30'},
+  {s:'Ingliz tili',groups:[['AMIRQULOVA U.N.','15:40–16:25'],['Mamatqulova M.A.','15:40–16:25']]},
+  {s:'Adabiyot',t:'Nurmatova F.S.',time:'16:30–17:15'},
+  {s:'Jismoniy madaniyat',t:'Mamatov B.B.',time:'17:20–18:05'}
+ ],
+ pay:[
+  {s:'Biologiya',t:'Raximova S.T.',time:'13:05–13:50'},
+  {s:'Tasviriy san’at',t:'Jumayeva D.S.',time:'13:55–14:40'},
+  {s:'Ona tili',t:'Nurmatova F.S.',time:'14:45–15:30'},
+  {s:'Ingliz tili',groups:[['AMIRQULOVA U.N.','15:40–16:25'],['Mamatqulova M.A.','15:40–16:25']]},
+  {s:'Kimyo',t:'NABIYEVA D.S.',time:'16:30–17:15'},
+  {s:'Jismoniy madaniyat',t:'Mamatov B.B.',time:'17:20–18:05'}
+ ],
+ jum:[
+  {s:'Ona tili',t:'Nurmatova F.S.',time:'13:05–13:50'},
+  {s:'Matematika',t:'Qo‘chqorova N.X.',time:'13:55–14:40'},
+  {s:'Musiqa',t:'Mamayusupov X.X.',time:'14:45–15:30'},
+  {s:'Tarbiya',t:'Begimkulov A.K.',time:'15:40–16:25'},
+  {s:'Adabiyot',t:'Nurmatova F.S.',time:'16:30–17:15'},
+  {s:'Rus tili',groups:[['Asanova M.T.','17:20–18:05'],['ACHILDIYEVA F.G.','17:20–18:05']]}
+ ],
+ shan:[
+  {s:'Biologiya',t:'Raximova S.T.',time:'13:05–13:50'},
+  {s:'Matematika',t:'Qo‘chqorova N.X.',time:'13:55–14:40'},
+  {s:'Ingliz tili',groups:[['AMIRQULOVA U.N.','14:45–15:30'],['Mamatqulova M.A.','14:45–15:30']]},
+  {s:'Geografiya',t:'Baxarova Z.S.',time:'15:40–16:25'},
+  {s:'Jahon tarixi',t:'Javliyeva L.X.',time:'16:30–17:15'},
+  {s:'Fizika',t:'Rajabova Z.S.',time:'17:20–18:05'}
+ ],
+ yak:[]
+};
+
+const holidays = [
+ {date:'1-yanvar',name:'Yangi yil',icon:'🎆'},
+ {date:'8-mart',name:'Xalqaro xotin-qizlar kuni',icon:'🌷'},
+ {date:'20-mart 2026',name:'Ramazon hayiti',icon:'🌙'},
+ {date:'21-mart',name:'Navro‘z bayrami',icon:'🌱'},
+ {date:'9-may',name:'Xotira va qadrlash kuni',icon:'🕊️'},
+ {date:'27-may 2026',name:'Qurbon hayiti',icon:'🐑'},
+ {date:'1-sentabr',name:'Mustaqillik kuni',icon:'🇺🇿'},
+ {date:'1-oktabr',name:'O‘qituvchilar va murabbiylar kuni',icon:'👨‍🏫'},
+ {date:'8-dekabr',name:'Konstitutsiya kuni',icon:'📜'}
+];
+
+const pad=n=>String(n).padStart(2,'0');
+const fmt = d => `${d.getDate()}-${['yanvar','fevral','mart','aprel','may','iyun','iyul','avgust','sentabr','oktabr','noyabr','dekabr'][d.getMonth()]} ${d.getFullYear()}`;
+const mondayOf = d => { const x=new Date(d); const day=x.getDay()||7; x.setDate(x.getDate()-day+1); x.setHours(0,0,0,0); return x; };
+const cloneDate=d=>new Date(d.getTime());
+let weekStart = new Date(2026,8,21);
+let query='';
+
+function weekDates(start){
+  return DAYS.map((_,i)=>{const d=cloneDate(start);d.setDate(start.getDate()+i);return d;});
+}
+function dateLabel(d){
+  const months=['yan','fev','mar','apr','may','iyun','iyul','avg','sen','okt','noy','dek'];
+  return `${pad(d.getDate())} ${months[d.getMonth()]}`;
+}
+function isSame(a,b){return a.toDateString()===b.toDateString()}
+
+function lessonMatches(l){
+  if(!query) return true;
+  const q=query.toLowerCase();
+  const who=(l.t||'')+' '+(l.groups||[]).flat().join(' ');
+  return (l.s+' '+who).toLowerCase().includes(q);
+}
+function lessonHtml(l){
+ if(!l) return `<div class="lesson empty">Bo‘sh</div>`;
+ if(l.groups){
+  return `<div class="lesson"><div class="subject">${l.s}</div><div class="multi">${l.groups.map(g=>`<div class="group"><div class="teacher">${g[0]}</div><div class="time">${g[1]}</div><div class="cab">Kabinet yo‘q</div></div>`).join('')}</div></div>`;
+ }
+ return `<div class="lesson"><div class="subject">${l.s}</div><div class="teacher">${l.t||''}</div><div class="time">${l.time}</div><div class="cab">Kabinet yo‘q</div></div>`;
+}
+
+function renderSchedule(){
+ const dates=weekDates(weekStart);
+ const grid=document.getElementById('schedule');
+ grid.innerHTML='';
+ const blank=document.createElement('div'); blank.className='cell head'; blank.innerHTML='<b>Soat</b>';
+ grid.appendChild(blank);
+ dates.forEach((d,i)=>{
+  const c=document.createElement('div'); c.className='cell head'+(isSame(d,new Date())?' today':'');
+  c.innerHTML=`<div class="day-name">${DAYS[i].full}</div><div class="day-date">${dateLabel(d)}</div>`;
+  grid.appendChild(c);
+ });
+ const max=6;
+ for(let slot=0;slot<max;slot++){
+   const sl=document.createElement('div'); sl.className='cell slot'; sl.textContent=slot+1; grid.appendChild(sl);
+   dates.forEach((d,i)=>{
+      const c=document.createElement('div'); c.className='cell'+(isSame(d,new Date())?' today':'');
+      const l=schedule[DAYS[i].key][slot];
+      c.innerHTML = l && lessonMatches(l) ? lessonHtml(l) : (query ? `<div class="lesson empty">Mos kelmadi</div>` : lessonHtml(null));
+      grid.appendChild(c);
+   });
+ }
+ document.getElementById('weekTitle').textContent=`${dateLabel(dates[0])} — ${dateLabel(dates[6])}`;
+ document.getElementById('weekRange').textContent=`${dates[0].getDate()}–${dates[6].getDate()}`;
+ const total=Object.values(schedule).flat().filter(Boolean).length;
+ document.getElementById('lessonCount').textContent=total;
+}
+
+function extraForDate(d){
+ const even=d.getDate()%2===0;
+ if(even) return {title:'Kiberxavfsizlik',time:'10:00–12:00',icon:'🛡️',text:'Juft sana: bugungi qo‘shimcha dars'};
+ return {title:'Ingliz tili',time:'08:00–10:00',icon:'🇬🇧',text:'Toq sana: bugungi qo‘shimcha dars'};
+}
+function updateClock(){
+ const now=new Date();
+ document.getElementById('clock').textContent=`${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+ document.getElementById('todayText').textContent=fmt(now);
+ const x=extraForDate(now);
+ document.getElementById('extraCard').innerHTML=`<b>${x.icon} ${x.text}</b><div style="font-size:18px;font-weight:900;margin-top:4px">${x.title}</div><div style="color:var(--muted);margin-top:4px">${x.time}</div>`;
+ document.getElementById('extraType').textContent=now.getDate()%2===0?'Cyber':'English';
+ renderTodayPlan(now);
+}
+function renderTodayPlan(now){
+ const day=(now.getDay()||7)-1;
+ const list=schedule[DAYS[day].key];
+ const el=document.getElementById('todayPlan');
+ if(!list.length){el.innerHTML='<div class="event"><div class="emoji">🌤️</div><div><b>Bugun maktab darslari yo‘q</b><span>Yakshanba — dam olish kuni.</span></div></div>';return;}
+ const ex=extraForDate(now);
+ el.innerHTML=`<div class="event"><div class="emoji">${ex.icon}</div><div><b>${ex.title} — ${ex.time}</b><span>Toq/juft sana qoidasi bo‘yicha qo‘shimcha mashg‘ulot.</span></div></div>`;
+ list.forEach((l,i)=>{
+   if(!l || !lessonMatches(l)) return;
+   const who=l.t || (l.groups||[]).map(g=>g[0]).join(' • ');
+   const time=l.time || (l.groups?.[0]?.[1]||'');
+   el.innerHTML+=`<div class="event"><div class="emoji">${['📘','➗','💻','🗣️','🧪','🏃'][i]||'📚'}</div><div><b>${i+1}. ${l.s}</b><span>${time} • ${who}</span></div></div>`;
+ });
+}
+function renderHolidays(){
+ const render = el => el.innerHTML=holidays.map(h=>`<div class="holiday"><div class="hdate">${h.icon} ${h.date}</div><div class="hname">${h.name}</div></div>`).join('');
+ render(document.getElementById('holidayList'));
+ render(document.getElementById('holidayModalList'));
+}
+function toast(msg){
+ const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+document.getElementById('prev').onclick=()=>{weekStart.setDate(weekStart.getDate()-7);renderSchedule();};
+document.getElementById('next').onclick=()=>{weekStart.setDate(weekStart.getDate()+7);renderSchedule();};
+document.getElementById('snapshot').onclick=()=>{weekStart=new Date(2026,8,21);renderSchedule();toast('Rasmdagi asl hafta ochildi ✅');};
+document.getElementById('todayBtn').onclick=()=>{weekStart=mondayOf(new Date());renderSchedule();toast('Bugungi hafta ochildi 📍');};
+document.getElementById('search').oninput=e=>{query=e.target.value.trim();renderSchedule();renderTodayPlan(new Date());};
+document.getElementById('printBtn').onclick=()=>window.print();
+document.getElementById('themeBtn').onclick=()=>{document.body.classList.toggle('light');localStorage.setItem('theme',document.body.classList.contains('light')?'light':'dark');};
+document.getElementById('holidayBtn').onclick=()=>document.getElementById('modal').classList.add('show');
+document.getElementById('closeModal').onclick=()=>document.getElementById('modal').classList.remove('show');
+document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')document.getElementById('modal').classList.remove('show')};
+if(localStorage.getItem('theme')==='light')document.body.classList.add('light');
+renderSchedule(); renderHolidays(); updateClock(); setInterval(updateClock,1000);
+</script>
+</body>
+</html>
